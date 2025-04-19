@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sixer_stats/utils/extensions/extentions.dart';
 import 'package:sixer_stats/view/players/player1_screen.dart';
 import 'package:sixer_stats/view/players/player2_screen.dart';

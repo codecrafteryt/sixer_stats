@@ -1,14 +1,6 @@
-    /*
-      ---------------------------------------
-      Project: Stumped Game Mobile Application
-          Date: April 11, 2024
-      Author: Ameer from Pakistan
-      ---------------------------------------
-      Description: Dependency Injection
-    */
-     import 'package:get/get_core/src/get_main.dart';
-    import 'package:get/get_instance/get_instance.dart';
-    import 'package:shared_preferences/shared_preferences.dart';
+ import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sixer_stats/controller/quiz_controller.dart';
 import 'package:sixer_stats/controller/setting_controller.dart';
 

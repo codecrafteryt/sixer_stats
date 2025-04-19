@@ -1,11 +1,3 @@
-/*
-  ---------------------------------------
-  Project: Stumped Game Mobile Application
-  Date: April 11, 2024
-  Author: Ameer from Pakistan
-  ---------------------------------------
-  Description: quiz controller logic code
-*/
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/model/quiz_question_model.dart';

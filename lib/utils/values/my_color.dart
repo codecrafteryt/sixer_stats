@@ -1,11 +1,4 @@
-  /*
-          ---------------------------------------
-         Project: Stumped Game Mobile Application
-          Date: April 11, 2024
-          Author: Ameer from Pakistan
-          ---------------------------------------
-          Description: Color code
-        */
+
     import 'dart:ui';
 
     import 'package:flutter/material.dart';

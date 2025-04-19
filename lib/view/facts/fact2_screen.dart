@@ -1,25 +1,14 @@
-  /*
-            ---------------------------------------
-            Project: Stumped Game Mobile Application
-            Date: April 11, 2024
-            Author: Ameer from Pakistan
-            ---------------------------------------
-            Description: fact 2 code
-          */
+
   import 'package:flutter/material.dart';
   import 'package:flutter_screenutil/flutter_screenutil.dart';
   import 'package:get/get.dart';
   import 'package:sixer_stats/utils/extensions/extentions.dart';
-import 'package:sixer_stats/view/facts/fact3_screen.dart';
 import 'package:sixer_stats/view/menu/menu.dart';
   import 'package:sixer_stats/view/widgets/custom_button.dart';
 import 'package:sixer_stats/view/widgets/play_card.dart';
-
-
   import '../../utils/values/my_color.dart' show MyColors;
   import '../../utils/values/style.dart';
   import '../widgets/custom_appbar.dart';
-  import 'fact2_screen.dart';
 
   class Fact2Screen extends StatelessWidget {
     Fact2Screen({super.key});

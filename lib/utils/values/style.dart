@@ -1,11 +1,4 @@
-    /*
-            ---------------------------------------
-            Project: Stumped Game Mobile Application
-          Date: April 11, 2024
-            Author: Ameer from Pakistan
-            ---------------------------------------
-            Description: Style code
-          */
+
     import 'package:flutter/material.dart';
         import 'package:flutter_screenutil/flutter_screenutil.dart';
     import 'package:google_fonts/google_fonts.dart';

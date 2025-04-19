@@ -1,21 +1,9 @@
-/*
-          ---------------------------------------
-          Project: Stumped Game Mobile Application
-          Date: April 11, 2024
-          Author: Ameer from Pakistan
-          ---------------------------------------
-          Description: app bar
-        */
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sixer_stats/utils/values/style.dart';
-import 'package:sixer_stats/view/menu/menu.dart';
 import 'package:sixer_stats/view/setting_screen.dart';
 import 'package:sixer_stats/view/widgets/custom_setting_widget.dart';
-
-import 'volume_button.dart';
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 

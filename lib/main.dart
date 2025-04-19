@@ -1,11 +1,3 @@
-/*
-          ---------------------------------------
-          Project: Stump Game Mobile Application
-          Date: April 10, 2024
-          Author: Ameer from Pakistan
-          ---------------------------------------
-          Description: Main.dart code
-        */
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

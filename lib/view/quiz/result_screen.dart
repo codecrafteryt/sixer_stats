@@ -1,13 +1,4 @@
-  /*
-      ---------------------------------------
-      Project: Bat and Brain Game Mobile Application
-      Date: April 4, 2024
-      Author: Ameer from Pakistan
-      ---------------------------------------
-      Description: result screen
-    */
-
-  import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
   import 'package:flutter_screenutil/flutter_screenutil.dart';
   import 'package:get/get.dart';
 import 'package:sixer_stats/controller/quiz_controller.dart';

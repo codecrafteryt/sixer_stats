@@ -1,15 +1,6 @@
-/*
-          ---------------------------------------
-          Project: Bat and Brain Game Mobile Application
-          Date: April 4, 2024
-          Author: Ameer from Pakistan
-          ---------------------------------------
-          Description: Quiz screen
-        */
 import 'package:audioplayers/audioplayers.dart' show AssetSource, AudioPlayer, PlayerMode, ReleaseMode;
 import 'package:flutter/foundation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingController extends GetxController {
@@ -36,68 +27,94 @@ class SettingController extends GetxController {
   AudioPlayer get backgroundMusicPlayer => _backgroundMusicPlayer;
   AudioPlayer get soundEffectsPlayer => _soundEffectsPlayer;
 
+  // Debug helper function
+  void _log(String message) {
+    debugPrint('🔊 AudioDebug: $message');
+  }
+
   void _setupAudio() async {
     try {
-      // Setup background music
-      await _setupBackgroundMusic();
-      // Setup sound effects
-      await _setupSoundEffects();
+      _log('Setting up audio...');
+      await _initializeBackgroundMusic();
+      await _initializeSoundEffects();
+      _log('Audio setup complete');
     } catch (e) {
-      debugPrint('Error setting up audio: $e');
+      _log('Error setting up audio: $e');
     }
   }
 
-  Future<void> _setupBackgroundMusic() async {
+  Future<void> _initializeBackgroundMusic() async {
     try {
+      _log('Initializing background music...');
+      // First stop any currently playing audio
+      await _backgroundMusicPlayer.stop();
+
+      // Set properties
       await _backgroundMusicPlayer.setReleaseMode(ReleaseMode.loop);
       await _backgroundMusicPlayer.setPlayerMode(PlayerMode.mediaPlayer);
 
-      await _backgroundMusicPlayer
-          .setSourceAsset('audio/music.wav')
-          .timeout(const Duration(seconds: 5));
+      // Load source
+      _log('Loading music asset...');
+      try {
+        await _backgroundMusicPlayer.setSource(AssetSource('audio/music.wav'));
+        _log('Music asset loaded successfully');
+      } catch (e) {
+        _log('Error loading music asset: $e');
+        return;
+      }
 
+      // Set volume
       await _backgroundMusicPlayer.setVolume(musicVolume.value);
-
+      _log('Music volume set to: ${(musicVolume.value * 100).toInt()}%');
+      await Future.delayed(Duration(milliseconds: 100)); // Wait to ensure volume is applied
       if (isMusicOn.value) {
         await _backgroundMusicPlayer.resume();
-        debugPrint('🎵 Background music started at volume: ${(musicVolume.value * 100).toInt()}%');
+      }
+
+      // Resume if enabled
+      if (isMusicOn.value) {
+        _log('Music is ON - starting playback');
+        await _backgroundMusicPlayer.resume();
+      } else {
+        _log('Music is OFF - not starting playback');
       }
     } catch (e) {
-      debugPrint('Error setting up background music: $e');
+      _log('Error in _initializeBackgroundMusic: $e');
     }
   }
 
-
-  Future<void> _setupSoundEffects() async {
+  Future<void> _initializeSoundEffects() async {
     try {
-      await _soundEffectsPlayer.setReleaseMode(ReleaseMode.loop);
+      _log('Initializing sound effects...');
+      await _soundEffectsPlayer.setReleaseMode(ReleaseMode.release);
       await _soundEffectsPlayer.setPlayerMode(PlayerMode.lowLatency);
       await _soundEffectsPlayer.setVolume(soundVolume.value);
-
-      if (isSoundOn.value) {
-        await _soundEffectsPlayer
-            .play(AssetSource('audio/sound.wav'))
-            .timeout(const Duration(seconds: 5));
-        debugPrint('🔁 Sound effect started in loop at volume: ${(soundVolume.value * 100).toInt()}%');
-      }
+      _log('Sound effects initialized');
     } catch (e) {
-      debugPrint('Error setting up looping sound effect: $e');
+      _log('Error in _initializeSoundEffects: $e');
     }
   }
-
-
-
 
   void toggleMusic() {
     isMusicOn.value = !isMusicOn.value;
     sharedPreferences.setBool(_musicKey, isMusicOn.value);
 
     if (isMusicOn.value) {
-      _backgroundMusicPlayer.resume();
-      debugPrint('🎵 Music turned ON, volume: ${(musicVolume.value * 100).toInt()}%');
+      _log('Turning music ON');
+      _backgroundMusicPlayer.resume().then((_) {
+        _log('Music resumed');
+      }).catchError((error) {
+        _log('Error resuming music: $error');
+        // Try to reload and start if resume fails
+        _initializeBackgroundMusic();
+      });
     } else {
-      _backgroundMusicPlayer.pause();
-      debugPrint('🎵 Music turned OFF');
+      _log('Turning music OFF');
+      _backgroundMusicPlayer.pause().then((_) {
+        _log('Music paused');
+      }).catchError((error) {
+        _log('Error pausing music: $error');
+      });
     }
   }
 
@@ -106,55 +123,94 @@ class SettingController extends GetxController {
     sharedPreferences.setBool(_soundKey, isSoundOn.value);
 
     if (isSoundOn.value) {
-      _soundEffectsPlayer.setReleaseMode(ReleaseMode.loop); // ensure loop mode
-      _soundEffectsPlayer.play(AssetSource('audio/sound.wav'));
-      debugPrint('🔊 Sound turned ON, looping...');
+      _log('Turning sound ON');
+      playSoundEffect();
     } else {
-      _soundEffectsPlayer.stop();
-      debugPrint('🔊 Sound turned OFF');
+      _log('Turning sound OFF');
     }
   }
 
-  void setMusicVolume(double value) {
-    musicVolume.value = value;
-    sharedPreferences.setDouble(_musicVolumeKey, value);
-    _backgroundMusicPlayer.setVolume(value);
+  void playSoundEffect() {
+    if (isSoundOn.value) {
+      _soundEffectsPlayer
+          .play(AssetSource('audio/sound.wav'))
+          .then((_) => _log('Sound effect played'))
+          .catchError((error) => _log('Error playing sound effect: $error'));
+    }
+  }
 
-    // Only update play state if already enabled
-    if (isMusicOn.value) {
+  void setMusicVolume(double volume) {
+    musicVolume.value = volume;
+    sharedPreferences.setDouble(_musicVolumeKey, volume);
+    _backgroundMusicPlayer.setVolume(volume);
+    _log('Setting music volume to: ${(volume * 100).toInt()}%');
+
+    if (volume <= 0.01) {
+      _backgroundMusicPlayer.pause();
+      _log('Volume is zero, pausing music');
+    } else if (isMusicOn.value) {
       _backgroundMusicPlayer.resume();
+      _log('Volume above zero, resuming music');
     }
-
-    debugPrint('🔊 setMusicVolume: ${(value * 100).toInt()}%');
   }
+
 
   void setSoundVolume(double value) {
+    // Ensure value is properly clamped
+    value = value.clamp(0.0, 1.0);
+
+    _log('Setting sound volume to: ${(value * 100).toInt()}%');
     soundVolume.value = value;
     sharedPreferences.setDouble(_soundVolumeKey, value);
-    _soundEffectsPlayer.setVolume(value);
 
-    // Only play test sound if sound is enabled
-    if (isSoundOn.value) {
-      _soundEffectsPlayer.play(AssetSource('audio/sound.wav'));
-    }
+    _soundEffectsPlayer.setVolume(value).then((_) {
+      _log('Sound volume applied');
 
-    debugPrint('🔊 setSoundVolume: ${(value * 100).toInt()}%');
+      // Play a test sound if sound is enabled
+      if (isSoundOn.value) {
+        playSoundEffect();
+      }
+    }).catchError((error) {
+      _log('Error setting sound volume: $error');
+    });
   }
 
+  // Added test function for debugging
+  void testBackgroundMusic() {
+    _log('Testing background music...');
+    _log('Current state: Music ${isMusicOn.value ? "ON" : "OFF"}, Volume: ${(musicVolume.value * 100).toInt()}%');
+
+    // Ensure music is loaded
+    _backgroundMusicPlayer.stop().then((_) {
+      _backgroundMusicPlayer.setSource(AssetSource('audio/music.wav')).then((_) {
+        _backgroundMusicPlayer.setVolume(musicVolume.value).then((_) {
+          _backgroundMusicPlayer.resume().then((_) {
+            _log('Test playback started');
+            isMusicOn.value = true;
+            sharedPreferences.setBool(_musicKey, true);
+          });
+        });
+      });
+    }).catchError((error) {
+      _log('Error in test music: $error');
+    });
+  }
 
   @override
   void onInit() {
     super.onInit();
 
-    // Load saved settings with reasonable defaults
-    isMusicOn = RxBool(sharedPreferences.getBool(_musicKey) ?? false);
-    isSoundOn = RxBool(sharedPreferences.getBool(_soundKey) ?? false);
-    musicVolume = RxDouble(sharedPreferences.getDouble(_musicVolumeKey) ?? 0.7);
-    soundVolume = RxDouble(sharedPreferences.getDouble(_soundVolumeKey) ?? 0.4);
+    _log('Initializing settings controller');
 
-    debugPrint('Settings initialized:');
-    debugPrint('- Music: ${isMusicOn.value ? "ON" : "OFF"} (${(musicVolume.value * 100).toInt()}%)');
-    debugPrint('- Sound: ${isSoundOn.value ? "ON" : "OFF"} (${(soundVolume.value * 100).toInt()}%)');
+    // Load saved settings with reasonable defaults
+    isMusicOn = RxBool(sharedPreferences.getBool(_musicKey) ?? true);
+    isSoundOn = RxBool(sharedPreferences.getBool(_soundKey) ?? true);
+    musicVolume = RxDouble(sharedPreferences.getDouble(_musicVolumeKey) ?? 0.7);
+    soundVolume = RxDouble(sharedPreferences.getDouble(_soundVolumeKey) ?? 0.7);
+
+    _log('Settings loaded:');
+    _log('- Music: ${isMusicOn.value ? "ON" : "OFF"} (${(musicVolume.value * 100).toInt()}%)');
+    _log('- Sound: ${isSoundOn.value ? "ON" : "OFF"} (${(soundVolume.value * 100).toInt()}%)');
 
     // Use Future.delayed to prevent immediate async calls in onInit
     Future.delayed(Duration.zero, () {
@@ -164,6 +220,7 @@ class SettingController extends GetxController {
 
   @override
   void onClose() {
+    _log('Disposing audio resources');
     _backgroundMusicPlayer.dispose();
     _soundEffectsPlayer.dispose();
     super.onClose();
