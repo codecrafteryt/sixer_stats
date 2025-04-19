@@ -77,13 +77,13 @@ import 'quiz_screen.dart';
                     ),
                   ),
                   30.sbh,
-
                   CustomButton(
                     height: 90.h,
                     width: 336.w,
                     text: "Retry",
                     onPressed: () {
-                      Get.offAll(() => QuizScreen());
+                      Get.to(() => QuizScreen());
+                      controller.resetQuiz();
                     },
                   ),
                   30.sbh,
