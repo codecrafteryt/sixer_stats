@@ -1,4 +1,4 @@
-package com.example.sixer_stats
+package com.playtrmquiz.sixerstats
 
 import io.flutter.embedding.android.FlutterActivity
 

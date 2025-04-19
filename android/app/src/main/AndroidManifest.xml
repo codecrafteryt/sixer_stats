@@ -1,6 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.playtrmquiz.sixerstats">
     <application
-        android:label="sixer_stats"
+        android:label="Sixer Stats"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
