@@ -19,6 +19,7 @@ import 'package:sixer_stats/utils/values/style.dart';
     final double borderOpacity;
     final double height;
     final double width;
+    final double fontSize; // 👈 New fontSize parameter
 
     const CustomButton({
       Key? key,
@@ -29,6 +30,7 @@ import 'package:sixer_stats/utils/values/style.dart';
       this.borderOpacity = 0.52,
       this.height = 108.0,
       this.width = 232.0,
+      this.fontSize = 40.0, // 👈 Default font size
     }) : super(key: key);
 
     @override
@@ -36,28 +38,31 @@ import 'package:sixer_stats/utils/values/style.dart';
       return GestureDetector(
         onTap: onPressed,
         child: Container(
-          width: width,  // Custom width
-          height: height,  // Custom height
+          width: width,
+          height: height,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(71, 76, 65, 1).withOpacity(0.8),
-            borderRadius: BorderRadius.circular(borderRadius), 
+            borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
               color: borderColor.withOpacity(borderOpacity),
-              width: 6.w, // Border width
+              width: 6.w,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
                 textAlign: TextAlign.center,
                 text,
                 style: kSize14DarkW400Text.copyWith(
-                  fontSize: 40.sp,
-                  color: MyColors.white
-                )
+                  fontSize: fontSize.sp, // 👈 Use passed fontSize
+                  color: MyColors.white,
+                ),
               ),
+            ),
           ),
         ),
       );
     }
   }
+

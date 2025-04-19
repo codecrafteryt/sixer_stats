@@ -8,11 +8,15 @@
           */
   import 'package:flutter/material.dart';
   import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
   import 'package:sixer_stats/utils/extensions/extentions.dart';
   import 'package:sixer_stats/utils/values/my_color.dart';
   import 'package:sixer_stats/utils/values/style.dart';
   import 'package:sixer_stats/view/widgets/custom_button.dart';
-  import '../widgets/custom_appbar.dart';
+  import '../menu/menu.dart';
+import '../widgets/custom_appbar.dart';
+import '../widgets/play_card.dart' show PlayerCard;
 
   class Player3Screen extends StatelessWidget {
     Player3Screen({super.key});
@@ -30,65 +34,66 @@
             height: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/blur.png"),
+                image: AssetImage("assets/images/background.png"),
                 fit: BoxFit.cover,
               ),
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  CustomAppBar(
-                    title: 'Facts:',
-                  ),
-                  20.sbh,
-                  Image.asset(
-                    'assets/images/3.png',
-                    width: 372.w,
-                    height: 241.h,
-                  ),
-                  13.sbh,
-                  Text(
-                      textAlign: TextAlign.center,
-                      "Pat Cummins",
-                      style: kSize14DarkW400Text.copyWith(
-                          fontSize: 40,
-                          color: Colors.white
-                      )
-                  ),
-                  10.sbh,
-                  Container(
-                    width: 336.w,
-                    height: 386.h,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(255, 255, 255, 0.52),
-                      border: Border.all(
-                        color: const Color.fromRGBO(65, 85, 75, 1),
-                        width: 6.w,
+              child: Stack(
+                children: [
+                  // Column content
+                  Column(
+                    children: <Widget>[
+                      CustomAppBar(
+                        title: 'Player',
                       ),
-                    ),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        "Pat Cummins had a great year. He kept the Ashes, won the World Test Championship, and led Australia to win the World Cup, where he bowled very well in the final. In 2023, he was named the ICC Men’s Cricketer of the Year. In the 2024 IPL auction, he became the second-most expensive player ever. Cummins is good at both bowling and batting lower down the order, and he’s getting better as a captain."
-                        ,
-                        style: kSize14DarkW400Text.copyWith(
-                          fontSize: 32,
-                          color: MyColors.white,
+                      140.sbh,
+                      Container(
+                        width: 328.w,
+                        height: 720.h,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300.withOpacity(0.8),
+                          border: Border.all(
+                            color: const Color.fromRGBO(111, 111, 111, 1),
+                            width: 14.w,
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.only(top: 210),
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            "India’s Hardik Pandya is a dynamic all-rounder known for his power-hitting and lively seam bowling. With a fearless attitude, Pandya can single-handedly change the course of a game in a matter of overs. His consistent performances in crucial junctures have earned him recognition as one of the best all-rounders in the contemporary era.",
+                            style: kSize14DarkW400Text.copyWith(
+                              fontSize: 32,
+                              color: MyColors.white,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  20.sbh,
-                  CustomButton(
-                    text: "Next",
-                    onPressed: () {
-                    //  Get.off(() => Player4Screen());
-                    },
+                      20.sbh,
+                      CustomButton(
+                        text: "Close",
+                        onPressed: () {
+                          Get.to(() => Menu());
+                        },
+                      ),
+                    ],
                   ),
 
+                  // Proper use of Positioned inside Stack
+                  Positioned(
+                    top: 120.h,
+                    left: 24.w,
+                    right: 24.w,
+                    child: PlayerCard(
+                      playerName: "Hardik Pandya",
+                      playerImagePath: "assets/images/player3.png",
+                      onTap: () {
+                        //Get.to(() => Menu());
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

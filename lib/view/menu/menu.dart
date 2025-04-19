@@ -10,14 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sixer_stats/utils/extensions/extentions.dart';
-import 'package:sixer_stats/view/quiz/quiz_screen.dart';
+import 'package:sixer_stats/view/facts/fact_screen.dart';
+import 'package:sixer_stats/view/players/player_screen.dart';
+import 'package:sixer_stats/view/quiz/quiz_starting_screen.dart';
 import 'package:sixer_stats/view/setting_screen.dart';
 import 'package:sixer_stats/view/widgets/custom_button.dart';
 import 'package:sixer_stats/view/widgets/custom_setting_widget.dart' show CustomSettingWidget;
-import 'package:sixer_stats/view/widgets/volume_button.dart';
-
-import '../facts/fact1_screen.dart';
-import '../players/player1_screen.dart' show Player1Screen;
 
 class Menu extends StatelessWidget {
   Menu({Key? key}) : super(key: key);
@@ -38,7 +36,7 @@ class Menu extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: 60),
+                60.sbh,
                 Image.asset(
                   'assets/images/icon.png',
                   width: 370.w,
@@ -49,21 +47,22 @@ class Menu extends StatelessWidget {
                   text: "Quiz",
                   height: 90.h,
                   onPressed: () {
-                    Get.off(() => QuizScreen());
+                    Get.to(() => QuizStartingScreen());
                   },
                 ),
                 25.sbh,
                 CustomButton(
                   text: "Players",
                   onPressed: () {
-                    Get.off(() => Player1Screen());
+                    Get.to(() => PlayerScreen());
                   },
                 ),
                 25.sbh,
                 CustomButton(
-                  text: "Facts",
+                  text: "Tournament",
+                  fontSize: 24.sp,
                   onPressed: () {
-                    Get.off(() => Fact1Screen());
+                    Get.to(() => FactScreen());
                   },
                 ),
                 25.sbh,

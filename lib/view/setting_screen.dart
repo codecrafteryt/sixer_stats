@@ -14,8 +14,9 @@ import 'package:sixer_stats/controller/setting_controller.dart';
 import 'package:sixer_stats/utils/extensions/extentions.dart';
 import 'package:sixer_stats/utils/values/my_color.dart';
 import 'package:sixer_stats/view/widgets/custom_appbar.dart' show CustomAppBar;
+import 'package:sixer_stats/view/widgets/custom_button.dart';
 
-import '../utils/values/style.dart' show kSize14DarkW400Text;
+import '../utils/values/style.dart' show kSize11DarkW500Text, kSize14DarkW400Text;
 
 class SettingsScreen extends StatelessWidget {
   final SettingController controller = Get.find();
@@ -45,29 +46,28 @@ class SettingsScreen extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: Image.asset(
                     "assets/images/icon.png",
-                    height: 100.h,
-                    width: 100.w,
+                    width: 370.w,
+                    height: 402.h,
                   ),
                 ),
-                20.sbh,
-
-                // Custom App Bar
-                CustomAppBar(
-                  title: "Setting",
-                ),
-                27.sbh,
-
+                80.sbh,
                 Text(
-                  "Music",
+                  "Music:",
                   style: kSize14DarkW400Text.copyWith(
-                    color: MyColors.textColor,
-                    fontSize: 32.sp,
+                    color: MyColors.white,
+                    fontSize: 64.sp,
                   ),
                 ),
                 20.sbh,
-
                 Row(
                   children: [
+                    Text(
+                      "0",
+                      style: kSize11DarkW500Text.copyWith(
+                        fontSize: 32.sp,
+                          color: Colors.white
+                      ),
+                    ),
                     10.sbw,
                     Expanded(
                       child: _VolumeBar(
@@ -80,35 +80,23 @@ class SettingsScreen extends StatelessWidget {
                         },
                       ),
                     ),
+                    10.sbw,
+                    Text(
+                      '100',
+                      //"${(controller.musicVolume.value * 100).toInt()}",
+                      style: kSize11DarkW500Text.copyWith(
+                          fontSize: 32.sp,
+                        color: Colors.white
+                      ),
+                    )
                   ],
-                ),
-                130.sbh,
-
-                Text(
-                  "SFX",
-                  style: kSize14DarkW400Text.copyWith(
-                    color: MyColors.textColor,
-                    fontSize: 32.sp,
-                  ),
                 ),
                 20.sbh,
-
-                Row(
-                  children: [
-                    10.sbw,
-                    Expanded(
-                      child: _VolumeBar(
-                        onVolumeChanged: controller.setSoundVolume,
-                        volumeValue: controller.soundVolume,
-                        onActivate: () {
-                          if (!controller.isSoundOn.value) {
-                            controller.toggleSound();
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                CustomButton(
+                    text: "Back",
+                    onPressed: (){
+                      Get.back();
+                    }),
               ],
             ),
           ),
@@ -140,7 +128,7 @@ class _VolumeBar extends StatelessWidget {
           final dx = localPosition.dx.clamp(0, barWidth);
           final newVolume = dx / barWidth;
           onVolumeChanged(newVolume);
-          onActivate(); // Auto-enable music/SFX
+          onActivate();
         }
 
         return GestureDetector(
@@ -152,31 +140,54 @@ class _VolumeBar extends StatelessWidget {
           },
           child: Container(
             width: barWidth,
-            height: 40.h,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4,
-                  offset: Offset(2, 2),
-                ),
-              ],
-            ),
-            child: Obx(() => Stack(
-              children: [
-                FractionallySizedBox(
-                  widthFactor: volumeValue.value,
-                  child: Container(
+            height: 60, // Increased to fit thumb better
+            child: Obx(() {
+              final thumbPosition = (volumeValue.value * barWidth) - 20; // 20 = radius offset
+
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Base bar background
+                  Container(
+                    width: barWidth,
+                    height: 20,
+                    margin: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
-                      color: Colors.green[700],
+                      color: Colors.grey[400],
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                ),
-              ],
-            )),
+
+                  // Filled part of the bar
+                  Positioned(
+                    top: 20,
+                    child: Container(
+                      width: volumeValue.value * barWidth,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: Colors.green[700],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+
+                  // Circular thumb
+                  Positioned(
+                    left: thumbPosition,
+                    top: 10, // Adjust to center vertically
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9E9B64), // Match the color from the image
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black87, width: 1),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
           ),
         );
       },
